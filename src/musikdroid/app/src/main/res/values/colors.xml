@@ -15,5 +15,7 @@
     <color name="theme_button_background">#303030</color>
     <color name="theme_button_background_transparent">#CF000000</color>
     <color name="theme_background">#202020</color>
+    <color name="theme_v16_button_background_pressed">#404040</color>
+    <color name="theme_v16_row_touched">#303030</color>
     <color name="main_playback_metadata">#bb000000</color>
 </resources>
