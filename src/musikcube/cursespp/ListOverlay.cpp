@@ -227,6 +227,16 @@ ListOverlay& ListOverlay::SetDeleteKeyCallback(DeleteKeyCallback cb) {
     return *this;
 }
 
+ListOverlay& ListOverlay::SetDismissedCallback(DismissedCallback cb) {
+    this->dismissedCallback = cb;
+    return *this;
+}
+
+ListOverlay& ListOverlay::SetKeyInterceptorCallback(KeyInterceptorCallback cb) {
+    this->keyInterceptorCallback = cb;
+    return *this;
+}
+
 void ListOverlay::OnListEntryActivated(cursespp::ListWindow* sender, size_t index) {
     if (itemSelectedCallback) {
         itemSelectedCallback(this, this->adapter, index);
@@ -236,8 +246,15 @@ void ListOverlay::OnListEntryActivated(cursespp::ListWindow* sender, size_t inde
     }
 }
 
+size_t ListOverlay::GetSelectedIndex() {
+    return this->listWindow->GetSelectedIndex();
+}
+
 bool ListOverlay::KeyPress(const std::string& key) {
-    if (key == "^[") { /* esc closes */
+    if (keyInterceptorCallback && keyInterceptorCallback(this, key)) {
+        return true;
+    }
+    else if (key == "^[") { /* esc closes */
         this->Dismiss();
         return true;
     }
@@ -262,12 +279,18 @@ bool ListOverlay::KeyPress(const std::string& key) {
 }
 
 void ListOverlay::OnVisibilityChanged(bool visible) {
-  LayoutBase::OnVisibilityChanged(visible);
+    LayoutBase::OnVisibilityChanged(visible);
 
-  if (visible) {
-    this->LayoutBase::SetFocus(this->listWindow);
-    this->Redraw();
-  }
+    if (visible) {
+        this->LayoutBase::SetFocus(this->listWindow);
+        this->Redraw();
+    }
+}
+
+void ListOverlay::OnDismissed() {
+    if (this->dismissedCallback) {
+        this->dismissedCallback(this);
+    }
 }
 
 void ListOverlay::RecalculateSize() {
