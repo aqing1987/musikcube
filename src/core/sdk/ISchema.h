@@ -39,6 +39,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <cstring>
 
 namespace musik { namespace core { namespace sdk {
 
@@ -59,10 +60,10 @@ namespace musik { namespace core { namespace sdk {
             };
 
             struct IntEntry {
-                Entry entry;
+              Entry entry;
               int minValue;
               int maxValue;
-                int defaultValue;
+              int defaultValue;
             };
 
             struct DoubleEntry {
@@ -139,8 +140,8 @@ namespace musik { namespace core { namespace sdk {
                 const std::string& name,
                 int defaultValue,
                 int min = INT_MIN,
-                int max = INT_MAX)
-      {
+                int max = INT_MAX) {
+
                 auto entry = new IntEntry();
                 entry->entry.type = ISchema::Type::Int;
                 entry->entry.name = AllocString(name);
@@ -155,8 +156,8 @@ namespace musik { namespace core { namespace sdk {
                 const std::string& name,
                 double defaultValue,
                 double min = DBL_MIN,
-                double max = DBL_MAX)
-      {
+                double max = DBL_MAX) {
+
                 auto entry = new DoubleEntry();
                 entry->entry.type = ISchema::Type::Double;
                 entry->entry.name = AllocString(name);
@@ -179,8 +180,8 @@ namespace musik { namespace core { namespace sdk {
             TSchema& AddEnum(
                 const std::string& name,
                 const std::vector<std::string>&& values,
-                const std::string& defaultValue) 
-            {
+                const std::string& defaultValue) {
+
                 auto entry = new EnumEntry();
                 entry->entry.type = ISchema::Type::Enum;
                 entry->entry.name = AllocString(name);
@@ -222,4 +223,3 @@ namespace musik { namespace core { namespace sdk {
     };
 
 } } }
-
