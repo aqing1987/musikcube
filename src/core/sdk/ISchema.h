@@ -67,10 +67,11 @@ namespace musik { namespace core { namespace sdk {
             };
 
             struct DoubleEntry {
-                Entry entry;
+              Entry entry;
               double minValue;
               double maxValue;
-                double defaultValue;
+              int precision;
+              double defaultValue;
             };
 
             struct StringEntry {
@@ -155,6 +156,7 @@ namespace musik { namespace core { namespace sdk {
             TSchema& AddDouble(
                 const std::string& name,
                 double defaultValue,
+                int precision = 2,
                 double min = DBL_MIN,
                 double max = DBL_MAX) {
 
@@ -162,6 +164,7 @@ namespace musik { namespace core { namespace sdk {
                 entry->entry.type = ISchema::Type::Double;
                 entry->entry.name = AllocString(name);
                 entry->defaultValue = defaultValue;
+                entry->precision = precision;
                 entry->minValue = min;
                 entry->maxValue = max;
                 entries.push_back(reinterpret_cast<Entry*>(entry));
@@ -210,7 +213,11 @@ namespace musik { namespace core { namespace sdk {
 
             const char* AllocString(const std::string& str) {
                 char* result = new char[str.size() + 1];
+#ifdef WIN32
+                strncpy_s(result, str.size() + 1, str.c_str(), str.size());
+#else
                 strncpy(result, str.c_str(), str.size());
+#endif
                 result[str.size()] = 0;
                 return result;
             }
